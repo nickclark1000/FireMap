@@ -122,7 +122,7 @@ data = {};
 
 $.ajax({
 	type: "GET",
-	url: "http://localhost:8888/FireMap/proc_ats.csv",                          
+	url: "http://localhost:8888/FireMap/ats_data.csv",                          
 	success: function(csv){                    
 		data = $.csv.toObjects(csv);
 		cleanseData(data);
