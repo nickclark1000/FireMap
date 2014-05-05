@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <title>Map</title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    google.load("earth", "1");
+    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMEWbu-DxkBYqkZa-gNuaLPPoAm0CEHCM&sensor=false&libraries=drawing&v=3">
+    </script>
+    <!-- <script type="text/javascript"
+  src="http://maps.googleapis.com/maps/api/js?libraries=visualization&key=AIzaSyDMEWbu-DxkBYqkZa-gNuaLPPoAm0CEHCM&sensor=false"> -->
+    </script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="../js/jquery.csv-0.71.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/notify.min.js"></script>
+    <script type="text/javascript" src="js/smoothie.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div id="map_canvas"></div>
+            <div id="controls">
+                <div id="time-label">00:00:00</div>
+                <input id="progress" type="range" name="points" value="0" min="0" max="1009">
+                <input id="speed" type="range" name="points" value="0" min="0" max="10">
+                <div id="speed-label">1x</div>
+                <div class="buttons">
+                    <button id="play">Time</button>
+                    <button id="simple">Simple</button>
+                    <button id="follow">Follow Single</button>
+                    <!-- <button id="animate">Animate Single</button> -->
+                </div>
+            </div>
+        </div>
+        <div id="event-box" class="col-md-5">
+            <canvas id="altitude-chart" width="500" height="100"></canvas>
+            <canvas id="speed-chart" width="500" height="100"></canvas>
+            <div id="events">
+
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
+
+<style>
+.alert {
+    margin-bottom: 0px;
+}
+#map_canvas {
+    width: 100%;
+    height: 70%;
+}
+#progress {
+    width: 100%;
+}
+#controls .buttons {
+    text-align: center;
+}
+#event-box {
+    overflow-y: scroll;
+    height: 100%;
+}
+</style>
