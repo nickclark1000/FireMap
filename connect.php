@@ -1,12 +1,10 @@
 <?php
 
 	$dbhost = 'localhost';	
-	$username='nickclark';
-	$password='penguin1';
-	$database='OMNR';
+	$username = 'nickclark';
+	$password = 'penguin1';
+	$database = 'OPS';
 	
-	$conn = mysql_connect($dbhost,$username,$password);
-	
-	mysql_select_db($database);
+	$conn = mysqli_connect($dbhost, $username, $password, $database);
 
 ?>
