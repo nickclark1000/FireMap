@@ -16,6 +16,7 @@ $(function() {
             clock.fire = map.fire('fire 1', clock.results.FIRE_LATITUDE, clock.results.FIRE_LONGITUDE, clock.results.FIRE_NAME);
             clock.plane = map.plane('plane 3', clock.data[0]['Latitude'], clock.data[0]['Longitude'], clock.data[0]['Heading'])
             $('#progress').attr('max', clock.data.length - 1);
+            view.set_start_label(clock.data[0].DateTime);
             clock.start();
         }
 
@@ -61,6 +62,8 @@ $(function() {
                 clock.stop()
             }
 
+            view.set_altitude_label(clock.data[i].Altitude);
+            view.set_speed_label(clock.data[i].Speed);
             chart.altitude.series.append(new Date().getTime(), data[i + 1].Altitude); // HACK: load the next interval since chart has delay
             chart.speed.series.append(new Date().getTime(), data[i + 1].Speed); // HACK: load the next interval since chart has delay
 
@@ -110,6 +113,7 @@ $(function() {
             $('#play').click(bindings.click_play)
             $('#simple').click(bindings.click_simple)
             $('#follow').click(bindings.click_follow)
+            $('#play, #simple, #follow').click(view.disable_buttons);
             $('#animate').click(bindings.click_animate)
             $('#speed').change(bindings.speed_change)
             $('#progress').change(bindings.progress_change)
@@ -252,7 +256,7 @@ $(function() {
         }
 
         view.update_time_label = function(now, then, speed) {
-            $('#time-label').html(now)
+            $('#current-time-label').html(now)
             // clearInterval(view.clock)
             // var i = 0,
             //     j = (then - now) / fclock.speed,
@@ -268,8 +272,24 @@ $(function() {
             // }, dt)
         }
 
+        view.set_start_label = function(t) {
+            $('#start-time-label').html(t)
+        }
+
+        view.set_altitude_label = function(n) {
+            $('#current-altitude-label').html(n)
+        }
+
+        view.set_speed_label = function(n) {
+            $('#current-speed-label').html(n)
+        }
+
         view.update_progress = function(n) {
             $('#progress').val(n)
+        }
+
+        view.disable_buttons = function() {
+            $('button').attr('disabled', true);
         }
 
         return view;
