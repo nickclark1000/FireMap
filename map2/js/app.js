@@ -29,10 +29,11 @@ $(function() {
             var i = parseInt($('#progress').val()),
                 pos = new google.maps.LatLng(data[i]['Latitude'], data[i]['Longitude']);
 
-
             // check for events
             if (data[i].Pickup && !data[i - 1].Pickup) { // very hacky way to avoid double scoop
                 view.event(data[i].DateTime, 'PICKUP', null, 'alert-info')
+            } else if (data[i].DROP) {
+                view.event(data[i].DateTime, 'DROP', null, 'alert-success')
             }
             if (data[i].FIRST_REP_DATE) {
                 view.event(data[i].DateTime, "FIRE REPORTED", {
@@ -60,12 +61,17 @@ $(function() {
                     Destination: results.AIRPORT_ARRV
                 }, 'alert-success')
                 clock.stop()
+                setTimeout(function(){
+                    clock.reset().start();
+                }, 10000)
             }
 
             view.set_altitude_label(clock.data[i].Altitude);
             view.set_speed_label(clock.data[i].Speed);
-            chart.altitude.series.append(new Date().getTime(), data[i + 1].Altitude); // HACK: load the next interval since chart has delay
-            chart.speed.series.append(new Date().getTime(), data[i + 1].Speed); // HACK: load the next interval since chart has delay
+            if (!data[i].SERVICE_ENDS) {
+                chart.altitude.series.append(new Date().getTime(), data[i + 1].Altitude); // HACK: load the next interval since chart has delay
+                chart.speed.series.append(new Date().getTime(), data[i + 1].Speed); // HACK: load the next interval since chart has delay
+            };
 
             plane.setOptions({
                 position: pos,
@@ -92,15 +98,19 @@ $(function() {
             clock.ticker = setInterval(function() {
                 clock.tick()
             }, clock.speed)
+            return this;
         }
 
         clock.reset = function() {
-            // view.update_progress(0);
+            view.update_progress(0);
+            view.clear_events();
+            return this;
         }
 
         clock.stop = function() {
             clock.playing = false;
             clearInterval(clock.ticker)
+            return this;
         }
 
         return clock;
@@ -253,6 +263,10 @@ $(function() {
             function parse_event(msg) {
 
             }
+        }
+
+        view.clear_events = function() {
+            $('#events').html('');
         }
 
         view.update_time_label = function(now, then, speed) {
@@ -505,6 +519,22 @@ $(function() {
                 });
                 model.plane3.data[model.plane3.data.length - 1].SERVICE_ENDS = true;
             })
+
+            // FIXME: HACK: Fake detecting drop data here
+            var drop_points = [66, 72, 78, 84, 91, 97, 104, 110, 117, 123, 129, 135, 141, 147, 154, 161, 168]
+            $.each(drop_points, function(di, dv) {
+                model.plane3.data[dv].DROP = true;
+                model.plane3.data[dv].Marker.setOptions({
+                    icon: {
+                        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                        scale: 2,
+                        rotation: model.plane3.data[dv]['Heading'],
+                        strokeColor: 'lime',
+                    },
+                })
+            });
+
+            // END HACK
         }
 
         model.setup = function(data) {
